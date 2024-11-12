@@ -1,0 +1,79 @@
+<div class="container mt-5 mb-5">
+    <div class="card shadow-lg rounded-lg mb-4">
+        <div class="card-header bg-primary text-white text-center">
+            <h3>Контактная информация</h3>
+        </div>
+        <div class="card-body">
+            <ul class="list-group mb-4">
+                <li class="list-group-item">
+                    <strong>Имя:</strong> {{ name }}
+                </li>
+                <li class="list-group-item">
+                    <strong>Телефон:</strong> {{ phone }}
+                </li>
+                <li class="list-group-item">
+                    <strong>Email:</strong> {{ email }}
+                </li>
+                <li class="list-group-item">
+                    <strong>Адрес:</strong> {{ address }}
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="card shadow-lg rounded-lg">
+        <div class="card-header bg-primary text-white text-center">
+            <h5>Отправьте сообщение:</h5>
+        </div>
+        <div class="card-body">
+            <form id="contactForm" action="" method="POST"> 
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}"> 
+                <div class="row mb-3 align-items-center">
+                    <label for="name" class="col-sm-2 col-form-label text-end">Ваше имя:</label>
+                    <div class="col-sm-10">
+                        <input type="text" id="name" name="name" class="form-control" required>
+                    </div>
+                </div>
+                <div class="row mb-3 align-items-center">
+                    <label for="email" class="col-sm-2 col-form-label text-end">Ваш email:</label>
+                    <div class="col-sm-10">
+                        <input type="email" id="email" name="email" class="form-control" required>
+                    </div>
+                </div>
+                <div class="row mb-3 align-items-center">
+                    <label for="message" class="col-sm-2 col-form-label text-end">Сообщение:</label>
+                    <div class="col-sm-10">
+                        <textarea id="message" name="message" class="form-control" rows="4" required></textarea>
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col-sm-6">
+                        <button type="submit" class="btn btn-primary w-100 py-2">Отправить</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault(); // Запрещаем стандартное поведение формы
+            const form = this;
+            const formData = new FormData(form);
+            fetch(form.action, {
+                method: 'POST',
+                body: formData })
+            .then(response => response.text())
+            .then(data => {
+                alert(data);  // Выводим сообщение об успешной отправке
+                form.reset(); // Очищаем форму
+            })
+            .catch(error => {
+                console.error('Ошибка при отправке формы:', error);
+                alert('Ошибка при отправке сообщения. Попробуйте позже.');
+            });
+        });
+    });
+</script>

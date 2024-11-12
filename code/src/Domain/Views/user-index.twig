@@ -1,0 +1,69 @@
+<div class="container" style="margin-top: 30px; margin-bottom: 30px;">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white text-center">
+            <h4>Список пользователей в базе данных</h4>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead class="table-dark">
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Имя</th>
+                        <th scope="col">Фамилия</th>
+                        <th scope="col">День рождения</th>
+                        {% if isAdmin %}
+                            <th scope="col">Редактирование</th>
+                            <th scope="col">Удаление</th>
+                        {% endif %}
+                    </tr>
+                    </thead>
+                    <tbody class="content-template">
+                        {% for user in users %}
+                        <tr>
+                            <td>{{ user.getUserId() }}</td>
+                            <td>{{ user.getUserName() }}</td>
+                            <td>{{ user.getUserLastName() }}</td>
+                            <td>
+                            {% if user.getUserBirthday() is not empty %}
+                                {{ user.getUserBirthday() | date('d.m.Y') }}
+                            {% else %}
+                                <b>Не задан</b>
+                            {% endif %}
+                            </td>
+                            {% if isAdmin %}
+                                <td><a href="/user/edit/?id_user={{ user.getUserId() }}" class="text-decoration-none">Редактировать</a></td>
+                                <td><a href="/user/delete/?user-id={{ user.getUserId() }}" class="text-decoration-none text-danger">Удалить</a></td>
+                            {% endif %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        let maxId = $('.table-responsive tbody tr:last-child td:first-child').text();
+        setInterval(function () { // Автоматическое обновление списка пользователей
+            $.ajax({
+                method: 'POST',
+                url: "/user/indexRefresh/",
+                data: { maxId: maxId }})
+            .done(function (response) {
+                let users = $.parseJSON(response);
+                if (users.length !== 0) {
+                    users.forEach(function (user) {
+                        let row = `<tr>
+                            <td>${user.id}</td>
+                            <td>${user.username}</td>
+                            <td>${user.userlastname}</td>
+                            <td>${user.userbirthday || "<b>Не задан</b>"}</td>
+                        </tr>`;
+                        $('.content-template').append(row);
+                        maxId = user.id;});}});
+        }, 10000);}); // Обновление каждые 10 секунд
+</script>

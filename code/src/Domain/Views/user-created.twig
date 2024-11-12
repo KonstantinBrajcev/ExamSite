@@ -1,0 +1,41 @@
+<!-- Основное содержимое страницы -->
+  <main class="flex-shrink-0">
+    <div class="container content-template">
+      <!-- Блок с уведомлением о сохранении -->
+      <div class="row justify-content-center">
+        <div class="col-md-6">
+          <div class="alert alert-success text-center" role="alert">
+            <h4 class="alert-heading">Успех!</h4>
+            <p>Данные успешно сохранены!</p>
+            <hr>
+            <p>Вы будете перенаправлены на главную страницу через <span id="timer">10</span> секунд...</p>
+          </div>
+          <div class="d-flex justify-content-center mt-3">
+            <a href="http://mysite.local/user/index" class="btn btn-primary">Перейти сейчас</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+<!-- Таймер и редирект через 10 секунд -->
+<script>
+    // Устанавливаем начальное значение таймера в секундах
+    let countdown = 10;
+    // Функция, которая обновляет таймер на экране каждую секунду
+    function startCountdown() {
+      const timerElement = document.getElementById('timer');
+      timerElement.innerText = countdown;
+      const interval = setInterval(() => {
+        countdown--;
+        timerElement.innerText = countdown;
+        // Если таймер дошел до нуля, перенаправляем пользователя и останавливаем таймер
+        if (countdown <= 0) {
+          clearInterval(interval);
+          window.location.href = "http://mysite.local/user/index";
+        }
+      }, 1000);
+    }
+    // Запускаем таймер, когда страница загружается
+  window.onload = startCountdown;
+</script>

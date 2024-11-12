@@ -1,0 +1,94 @@
+<div class="container mt-5">
+    <!-- Виджет погоды -->
+    <div id="weather-widget" class="card shadow-sm">
+        <div class="card-header bg-primary text-white text-center">
+            <h3>Погода в вашем городе</h3>
+        </div>
+        <div class="card-body">
+            <div id="loading-spinner" class="text-center">
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Загрузка...</span>
+                </div>
+            </div>
+            <div id="weather-content" style="display: none;">
+                <p id="weather-location" class="mb-2"></p>
+                <p id="weather-description" class="mb-2"></p>
+                <p id="weather-temperature" class="mb-2"></p>
+                <p id="weather-humidity" class="mb-2"></p>
+                <p id="weather-wind" class="mb-2"></p>
+                <p id="weather-pressure" class="mb-2"></p>
+                <p id="weather-visibility" class="mb-2"></p>
+            </div>
+            <div id="weather-error" class="text-center text-danger" style="display: none;">
+                <p>Не удалось загрузить данные о погоде. Попробуйте позже.</p>
+            </div>
+        </div>
+    </div>
+    
+<!-- Блок с фразой умного человека -->
+    <div id="quote-widget" class="card shadow-sm mt-4">
+        <div class="card-header bg-success text-white text-center">
+            <h3>Фраза умного человека</h3>
+        </div>
+        <div class="card-body">
+            <div id="quote-content" class="text-center">
+                <p id="quote-text" class="mb-2">Загрузка...</p>
+                <p id="quote-author" class="mb-0 text-muted">...</p>
+            </div>
+            <div id="quote-error" class="text-center text-danger" style="display: none;">
+                <p>Не удалось загрузить цитату. Попробуйте позже.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const apiKey = 'fd00b775400af3aa127f833891c6ccc6'; // API-ключ
+        function fetchWeather(latitude, longitude) {
+            const apiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=metric&lang=ru`;
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    const location = data.name;
+                    const description = data.weather[0].description;
+                    const temperature = Math.round(data.main.temp);
+                    const humidity = data.main.humidity;
+                    const windSpeed = data.wind.speed;
+                    const windDirection = data.wind.deg;
+                    const pressure = data.main.pressure;
+                    const visibility = data.visibility / 1000; // Преобразуем в километры
+                    document.getElementById('weather-location').textContent = `Город: ${location}`;
+                    document.getElementById('weather-description').textContent = `Описание: ${description}`;
+                    document.getElementById('weather-temperature').textContent = `Температура: ${temperature}°C`;
+                    document.getElementById('weather-humidity').textContent = `Влажность: ${humidity}%`;
+                    document.getElementById('weather-wind').textContent = `Ветер: ${windSpeed} м/с, направление ${windDirection}°`;
+                    document.getElementById('weather-pressure').textContent = `Давление: ${pressure} гПа`;
+                    document.getElementById('weather-visibility').textContent = `Видимость: ${visibility} км`;
+                    // Скрыть спиннер и показать данные
+                    document.getElementById('loading-spinner').style.display = 'none';
+                    document.getElementById('weather-content').style.display = 'block';
+                })
+                .catch(error => {
+                    console.error('Ошибка получения данных о погоде:', error);
+                    document.getElementById('loading-spinner').style.display = 'none';
+                    document.getElementById('weather-error').style.display = 'block';
+                });
+        }
+
+        function fetchLocationByIP() {
+            fetch('https://ipinfo.io/json?token=06fa722223d121') // API-ключ
+                .then(response => response.json())
+                .then(data => {
+                    const [lat, lon] = data.loc.split(",");
+                    fetchWeather(lat, lon);  // Вызов функции fetchWeather
+                })
+                .catch(error => {
+                    console.error("Ошибка получения местоположения по IP:", error);
+                    document.getElementById('loading-spinner').style.display = 'none';
+                    document.getElementById('weather-error').style.display = 'block';
+                });
+        }
+        fetchLocationByIP();
+    });
+</script>

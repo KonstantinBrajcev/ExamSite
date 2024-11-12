@@ -1,0 +1,29 @@
+{% if not auth-success %}
+  <div class="alert alert-danger" role="alert"> {{ auth_error }} </div>
+{% endif %}
+
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <h2 class="mb-4 text-center">Войти</h2>
+
+      <form action="/user/login/" method="post">
+        <input id="csrf_token" type="hidden" name="csrf_token" value="{{ csrf_token }}">
+
+        <div class="mb-3">
+          <label for="user-login" class="form-label">Логин:</label>
+          <input id="user-login" type="text" class="form-control" name="login" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="user-password" class="form-label">Пароль:</label>
+          <input id="user-password" type="password" class="form-control" name="password" required>
+        </div>
+
+        <div class="d-grid gap-2">
+          <button type="submit" class="btn btn-primary">Войти</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

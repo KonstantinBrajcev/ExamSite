@@ -3,3 +3,4 @@ decode.py
 remember.md
 db/mysql.sock
 db/*
+.venv/*

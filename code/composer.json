@@ -1,0 +1,22 @@
+{
+    "name": "geekbrains/application",
+    "description": "KastettProject",
+    "autoload": {
+        "psr-4": {
+            "Application\\": "src/Application/",
+            "Infrastructure\\": "src/Infrastructure/",
+            "Domain\\Models\\": "src/Domain/Models/",
+            "Domain\\Controllers\\": "src/Domain/Controllers/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Konstantin",
+            "email": "kastett@mail.ru"
+        }
+    ],
+    "require": {
+        "twig/twig": "^3.0",
+        "phpmailer/phpmailer": "^6.9"
+    }
+}

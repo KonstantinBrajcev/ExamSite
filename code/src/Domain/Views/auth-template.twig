@@ -1,0 +1,24 @@
+<div class="container mt-3">
+    <div class="card shadow-sm">
+        <div class="card-body d-flex justify-content-between align-items-center">
+            <img src="/logo.png" alt="Логотип" width="40" height="40" class="me-2">
+            {% if not user_authorized %}
+                <div>
+                    <span class="text-muted">Вы не авторизованы</span>
+                </div>
+                <div class="text-end">
+                    <a href="/user/login/" class="btn btn-primary">Войти</a>
+                </div>
+            {% else %}
+                <div>
+                    <p class="mb-0">Пользователь: <strong>{{ currentUser.userName }} {{ currentUser.userLastName }}</strong></p>
+                </div>
+                <div class="text-end">
+                    <form action="/user/logout/" method="post" class="d-inline">
+                        <button type="submit" class="btn btn-danger">Выйти</button>
+                    </form>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
